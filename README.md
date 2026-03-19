@@ -1,6 +1,8 @@
-﻿# Bilibili 搬运助手 (bilibili-banshi)
+﻿# Bilibili 搬屎助手 (bilibili-banshi)
 
 一个自动化工具，用于从快手下载视频并上传到 Bilibili。通过 Bilibili 私信接收指令，实现远程控制视频搬运流程。
+
+方便各位快速搬屎。
 
 ## 功能特性
 
@@ -95,6 +97,8 @@ https://v.kuaishou.com/xxxxx
 ```
 
 程序会自动下载该视频到 `videos/` 目录。
+
+注：并不需要把视频链接提取出来，代码会通过正则表达式自动提取，所以只要发的消息包含快手分享链接即可。
 
 #### 2. 配置视频信息
 
