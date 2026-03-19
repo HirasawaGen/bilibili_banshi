@@ -1,0 +1,16 @@
+[project]
+name = "bilibili-banshi"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "aiofiles>=25.1.0",
+    "aiohttp>=3.13.3",
+    "aiolimiter>=1.2.1",
+    "bilibili-api-python>=17.4.1",
+    "loguru>=0.7.3",
+    "opencv-python>=4.13.0.92",
+    "pyyaml>=6.0.3",
+    "yt-dlp>=2026.3.13",
+]
