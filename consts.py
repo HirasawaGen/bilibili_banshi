@@ -1,4 +1,5 @@
 import json
+import asyncio
 from typing import TYPE_CHECKING, Final
 from asyncio import Queue
 from pathlib import Path
@@ -17,7 +18,12 @@ __all__ = [
     'URL_QUEUE',
     'LOGGER',
     'TARGET_UID',
-    'SELF_UID'
+    'SELF_UID',
+    'SESSION',
+    'MESSAGE_QUEUE',
+    'URL_QUEUE',
+    'DONE',
+    'SEND_MSG_TASK',
 ]
 
 
@@ -31,7 +37,6 @@ assert _COOKIES_PATH.exists(), '请先配置cookies.json文件'
 with open(_TARGET_PATH, 'r') as f:
     TARGET_UID: Final[int] = int(f.read().strip())
     
-
 with open(_COOKIES_PATH, 'r') as f:
     _cookies = json.load(f)
 _cookies['sessdata'] = _cookies['SESSDATA']
@@ -39,6 +44,10 @@ _cookies['sessdata'] = _cookies['SESSDATA']
 CREDENTIAL: Final[Credential] = Credential(**_cookies)
 
 SESSION: Final[Session] = Session(CREDENTIAL)
+
+SELF_UID = int(getattr(CREDENTIAL, 'DedeUserID', 0))
+
+assert SELF_UID, '请先登录账号'
 
 URL_QUEUE: Final[Queue[str]] = Queue(maxsize=0x10)
 '''
@@ -49,19 +58,32 @@ URL_QUEUE: Final[Queue[str]] = Queue(maxsize=0x10)
 消费者：下载视频到本地
 '''
 
-SELF_UID = int(getattr(CREDENTIAL, 'DedeUserID', 0))
+MESSAGE_QUEUE: Final[Queue[str]] = Queue()
 
-assert SELF_UID, '请先登录账号'
 
+async def _send_msg_task():
+    while True:
+        message = await MESSAGE_QUEUE.get()
+        await send_msg(
+            CREDENTIAL,
+            TARGET_UID,
+            EventType.TEXT,
+            message
+        )
+        MESSAGE_QUEUE.task_done()
+
+async def _done():
+    await asyncio.gather(
+        URL_QUEUE.join(),
+        MESSAGE_QUEUE.join()
+    )
+
+DONE = _done()
 
 def _success_sink(msg: 'Message'):
-    coro = send_msg(
-        CREDENTIAL,
-        TARGET_UID,
-        EventType.TEXT,
-        msg.record['message']
-    )
-    sync(coro)
-    
-LOGGER.add(_success_sink, level='SUCCESS')
+    if msg.record["level"].name != "SUCCESS": return
+    MESSAGE_QUEUE.put_nowait(msg.record['message'])
 
+
+SEND_MSG_TASK = _send_msg_task()
+LOGGER.add(_success_sink, level='SUCCESS')

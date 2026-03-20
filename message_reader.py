@@ -1,4 +1,3 @@
-from math import e
 from pathlib import Path
 from typing import Final
 import re
@@ -8,9 +7,6 @@ import aiofiles
 import yaml
 
 from consts import *
-
-
-SESSION: Final[Session] = Session(CREDENTIAL)
 
 
 PATTERNS: Final[dict[str, re.Pattern]] = {
