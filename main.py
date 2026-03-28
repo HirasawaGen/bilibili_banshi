@@ -18,12 +18,13 @@ async def main():
 
 if __name__ == '__main__':
     try:
-        LOGGER.success('程序启动')
+        LOGGER.bili('程序启动')
         asyncio.run(main())
     except KeyboardInterrupt:
         LOGGER.warning('KeyboardInterrupt')
     except Exception as e:
         LOGGER.error(e)
-        LOGGER.success(f'异常失败，错误信息：\n{e}')
+        LOGGER.bili(f'异常失败，错误信息：\n{e}')
     finally:
         asyncio.run(DONE)
+        LOGGER.bili('程序结束')

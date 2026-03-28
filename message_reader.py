@@ -39,7 +39,7 @@ async def _on_text(event: Event):
         return
     content = event.content.strip()
     if content == 'test':
-        LOGGER.success('test')
+        LOGGER.bili('test')
     name = ''
     url = ''
     for name_, pattern in PATTERNS.items():

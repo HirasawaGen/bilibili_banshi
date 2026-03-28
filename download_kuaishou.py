@@ -98,7 +98,7 @@ async def download_kuaishou_video(
             video_path.unlink(missing_ok=True)
         return None
     # LOGGER.info(f"Video downloaded to {video_path}")
-    LOGGER.success(f'成功下载视频: {video_path}')
+    LOGGER.bili(f'成功下载视频: {video_path}')
     return video_path
     
 

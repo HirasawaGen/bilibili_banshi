@@ -81,7 +81,7 @@ async def upload_video(
         
     await uploader.start()
     flag_path.touch()
-    LOGGER.success(f'成功上传视频: {video_path}')
+    LOGGER.bili(f'成功上传视频: {video_path}')
     return True
 
 
